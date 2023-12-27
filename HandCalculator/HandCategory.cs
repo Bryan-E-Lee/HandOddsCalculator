@@ -71,7 +71,7 @@
         public override string ToString() => Name;
         public override bool Equals(object? obj)
         {
-            if (!(obj is HandCategory otherCategory))
+            if (obj is not HandCategory otherCategory)
             {
                 return base.Equals(obj);
             }

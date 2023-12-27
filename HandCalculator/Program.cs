@@ -5,8 +5,6 @@ using HandCalculator.Analyzers;
 
 const string InvalidEntry = "\nInvalid Entry\n";
 
-//var rerolls = 0;
-//var extraRolls = 0;
 var handConfig = new HandConfig
 {
     CommunalRolls = 2,

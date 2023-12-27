@@ -20,7 +20,7 @@
 
         public override int GetHashCode()
         {
-            var hash = String.Concat(EffectiveRolls);//.OrderBy(roll => roll));
+            var hash = String.Concat(EffectiveRolls);
             return Convert.ToInt32(hash);
         }
 
