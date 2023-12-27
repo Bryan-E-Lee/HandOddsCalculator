@@ -4,9 +4,55 @@ namespace HandCalculator.Analyzers
 {
     internal class PossibleHandsAnalyzer : HandAnalyzer
     {
-        public const decimal OffBy1RerollOdds = 1m / 6;
-        public const decimal OffBy2RerollOdds = 1m / 18;
-        public const decimal OffBy3RerollOdds = 1m / 36;
+        private const decimal OffBy1RerollOddsBase = 1m / 6;
+        private const decimal OffBy2RerollOddsBase = 2m / 36;
+        private const decimal OffBy3RerollOddsBase = 6m / 216;
+
+        private decimal OffBy1RerollOdds
+        {
+            get
+            {
+                if (_config.Rerolls < 1)
+                {
+                    return 0;
+                }
+                var cumulativeOdds = 0m;
+                if (_config.Rerolls >= 3)
+                {
+                    cumulativeOdds += OffBy3RerollOddsBase;
+                }
+                if (_config.Rerolls >= 2)
+                {
+                    cumulativeOdds += OffBy2RerollOddsBase;
+                }
+                if (_config.Rerolls >= 1)
+                {
+                    cumulativeOdds += OffBy1RerollOddsBase;
+                }
+                return cumulativeOdds;
+            }
+        }
+        private decimal OffBy2RerollOdds
+        {
+            get
+            {
+                if (_config.Rerolls < 1)
+                {
+                    return 0;
+                }
+                var cumulativeOdds = 0m;
+                if (_config.Rerolls >= 3)
+                {
+                    cumulativeOdds += OffBy3RerollOddsBase;
+                }
+                if (_config.Rerolls >= 2)
+                {
+                    cumulativeOdds += OffBy2RerollOddsBase;
+                }
+                return cumulativeOdds;
+            }
+        }
+        private decimal OffBy3RerollOdds => _config.Rerolls > 2 ? OffBy3RerollOdds : 0;
 
         public PossibleHandsAnalyzer(HandConfig handConfig) : base(handConfig)
         { }
@@ -15,7 +61,7 @@ namespace HandCalculator.Analyzers
 
         protected override string GetAnalysisString(List<IGrouping<string, Hand>> handGroups, IEnumerable<HandCategory> excludedHands, IEnumerable<HandCategory> includedHands)
         {
-            Console.WriteLine($"Analyzing Possible Hands\n===\n");
+            Console.WriteLine($"Analyzing Possible Hands ({_config.Rerolls} rerolls and {_config.ExtraRolls} extra rolls)\n===\n");
             if (handGroups.Count() == 0)
             {
                 return "No data.";
